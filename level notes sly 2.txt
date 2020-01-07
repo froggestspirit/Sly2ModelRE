@@ -1,0 +1,18 @@
+Find 00 C0 04 6C subtract 0x10, this appears to be the start of the model, it should read as 06 00 00 10
+
+Find 08 C0 01 6C add 0x20 to find pointer to header below (08 C0 01 6C is sometimes +0x54 from the start of the model)
+
+Header?: 09 C0 01 6C
+Header+0x14: 0A C0 0B 6D
+Header+0x70: 15 C0 09 6C
+Header+0x104: 1E C0 09 6C (can sometimes be 04 01 00 01 ff ff nn 65 of the UV mapping. This appears to be for billboarded objects, like the flame above the safehouse in ep7)
+Header+0x198: 04 01 00 01 ff ff nn 65 (UV Mapping, if above was 1E C0 09 6C. This is 27 C0 01 6D for an animated conveyor belt in ep7, adding 0xC to this gives the UV address)
+-Level split into chunks
+Per chunk: (ff is unknown, but maybe flags? nn = number of elements in the group)
+	UV Mapping - 04 01 00 01 ff ff nn 65
+		each UV is 4 bytes per vertex
+	Vertex Data - ff ff nn 6C (always aligned to multiples of 0x10?)
+		Vertecies are floats, vertex is X,Y,Z then 4 bytes of flags (vertex is 16 bytes total)
+	Unknown? - 01 01 00 01 ?? ?? ?? ?? ?? ?? ?? ?? ff ff nn 6C
+
+	Unknown? - 00 00 00 00 ff ff nn 6C
